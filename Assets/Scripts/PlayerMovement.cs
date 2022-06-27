@@ -7,16 +7,21 @@ public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] float runSpeed = 7f;
     [SerializeField] float jumpSpeed = 5f;
+    [SerializeField] float wallJumpSpeed = 2f;
 
     Vector2 moveInput;
     Rigidbody2D myRigidbody;
-    CapsuleCollider2D myCollider;
+    CapsuleCollider2D myBodyCollider;
+    BoxCollider2D myFeetCollider;
     Animator myAnimator;
+    bool hasWallJumped = false;
+    bool hasDied = false;
 
     void Start()
     {
         myRigidbody = GetComponent<Rigidbody2D>();
-        myCollider = GetComponent<CapsuleCollider2D>();
+        myBodyCollider = GetComponent<CapsuleCollider2D>();
+        myFeetCollider = GetComponent<BoxCollider2D>();
         myAnimator = GetComponent<Animator>();
     }
 
@@ -28,20 +33,48 @@ public class PlayerMovement : MonoBehaviour
 
     void OnMove(InputValue value)
     {
-        moveInput = value.Get<Vector2>();
+        if (!hasDied)
+        {
+            moveInput = value.Get<Vector2>();
+        }
     }
 
     void OnJump(InputValue value)
     {
-        bool isTouching = myCollider.IsTouchingLayers(LayerMask.GetMask("Ground"));
-        if (!isTouching)
+        bool isTouchingFeet = myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground"));
+        bool isTouchingBody = myBodyCollider.IsTouchingLayers(LayerMask.GetMask("Ground"));
+        if (!isTouchingFeet && !isTouchingBody)
         {
             return;
         }
         if (value.isPressed)
         {
+            if (isTouchingFeet)
+            {
+                Jump();
+                hasWallJumped = false;
+            }
+            else if (!hasWallJumped)
+            {
+                Debug.Log("localScale:", transform);
+                WallJump();
+                hasWallJumped = true;
+            }
+        }
+        
+    }
+
+    void Jump()
+    {
+        if (!hasDied)
+        {
             myRigidbody.velocity += new Vector2(0f, jumpSpeed);
         }
+    }
+
+    void WallJump()
+    {
+        myRigidbody.velocity += new Vector2(wallJumpSpeed, jumpSpeed);
     }
 
     void Run()
@@ -64,6 +97,26 @@ public class PlayerMovement : MonoBehaviour
         if (playerHasHorizontalSpeed)
         {
             transform.localScale = new Vector2(Mathf.Sign(myRigidbody.velocity.x) * 3.5f, 3.5f);
+        }
+    }
+
+    void OnCollisionEnter2D(Collision2D other) 
+    {
+        bool isTouchingBody = myBodyCollider.IsTouchingLayers(LayerMask.GetMask("Enemy"));
+        if (isTouchingBody)
+        {
+            Destroy(other.gameObject);
+            hasDied = true;
+        }     
+    }
+
+    void OnTriggerEnter2D(Collider2D other) 
+    {
+        bool isTouchingFeet = myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Enemy"));
+        if (other.gameObject.tag == "Enemy" && isTouchingFeet)    
+        {
+            Jump();            
+            Destroy(other.gameObject);
         }
     }
 }
