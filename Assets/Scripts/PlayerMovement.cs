@@ -8,12 +8,17 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float runSpeed = 7f;
     [SerializeField] float jumpSpeed = 5f;
     [SerializeField] float wallJumpSpeed = 2f;
+    float playerHealth = 2f;
+    float baseSize = 2f;
+    float sizeAdjust = 1.75f;
 
     Vector2 moveInput;
     Rigidbody2D myRigidbody;
     CapsuleCollider2D myBodyCollider;
     BoxCollider2D myFeetCollider;
     Animator myAnimator;
+    GameObject player;
+
     bool hasWallJumped = false;
     bool hasDied = false;
 
@@ -23,6 +28,7 @@ public class PlayerMovement : MonoBehaviour
         myBodyCollider = GetComponent<CapsuleCollider2D>();
         myFeetCollider = GetComponent<BoxCollider2D>();
         myAnimator = GetComponent<Animator>();
+        player = GameObject.FindWithTag("Player");
     }
 
     void Update()
@@ -56,7 +62,6 @@ public class PlayerMovement : MonoBehaviour
             }
             else if (!hasWallJumped)
             {
-                Debug.Log("localScale:", transform);
                 WallJump();
                 hasWallJumped = true;
             }
@@ -96,8 +101,21 @@ public class PlayerMovement : MonoBehaviour
         bool playerHasHorizontalSpeed = Mathf.Abs(myRigidbody.velocity.x) > Mathf.Epsilon; 
         if (playerHasHorizontalSpeed)
         {
-            transform.localScale = new Vector2(Mathf.Sign(myRigidbody.velocity.x) * 3.5f, 3.5f);
+            transform.localScale = new Vector2(Mathf.Sign(myRigidbody.velocity.x) * sizeAdjust * baseSize, sizeAdjust * baseSize);
         }
+    }
+
+    void Die()
+    {
+        Destroy(myBodyCollider);
+        hasDied = true;
+        // todo I need to figure out an animation or programmatic spin for character when dying
+    }
+
+    void Shrink() 
+    {
+        Debug.Log(transform.localScale);
+        transform.localScale = new Vector2(Mathf.Sign(transform.localScale.x) * sizeAdjust * baseSize, sizeAdjust * baseSize);
     }
 
     void OnCollisionEnter2D(Collision2D other) 
@@ -106,7 +124,17 @@ public class PlayerMovement : MonoBehaviour
         if (isTouchingBody)
         {
             Destroy(other.gameObject);
-            hasDied = true;
+            myAnimator.SetTrigger("hit");
+            if (playerHealth > 1)
+            {
+                Shrink();
+                playerHealth -= 1;
+                sizeAdjust = 1.25f;
+            }
+            else
+            {
+                Die();
+            }
         }     
     }
 
