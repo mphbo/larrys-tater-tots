@@ -50,7 +50,7 @@ public class PlayerMovement : MonoBehaviour
     void OnJump(InputValue value)
     {
         bool isTouchingFeet = myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground"));
-        bool isTouchingHazard = myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Hazards"));
+        bool isTouchingHazard = myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Hazard"));
         bool isTouchingBody = myBodyCollider.IsTouchingLayers(LayerMask.GetMask("Ground"));
         if (!isTouchingFeet && !isTouchingBody && !isTouchingHazard)
         {
@@ -124,7 +124,7 @@ public class PlayerMovement : MonoBehaviour
     void OnCollisionEnter2D(Collision2D other) 
     {
         bool isTouchingEnemy = myBodyCollider.IsTouchingLayers(LayerMask.GetMask("Enemy"));
-        bool isTouchingHazard = myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Hazards"));
+        bool isTouchingHazard = myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Hazard"));
         if (isTouchingEnemy || isTouchingHazard)
         {
             if (isTouchingEnemy)
