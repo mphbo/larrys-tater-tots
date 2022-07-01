@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float runSpeed = 7f;
     [SerializeField] float jumpSpeed = 5f;
     [SerializeField] float wallJumpSpeed = 2f;
+    [SerializeField] float invincibleTime = 4f;
     float playerHealth = 2f;
     float baseSize = 2f;
     float sizeAdjust = 1.75f;
@@ -20,6 +21,7 @@ public class PlayerMovement : MonoBehaviour
     GameObject player;
 
     bool hasWallJumped = false;
+    bool playerIsInvincible = false;
     bool hasDied = false;
 
     void Start()
@@ -48,14 +50,15 @@ public class PlayerMovement : MonoBehaviour
     void OnJump(InputValue value)
     {
         bool isTouchingFeet = myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground"));
+        bool isTouchingHazard = myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Hazard"));
         bool isTouchingBody = myBodyCollider.IsTouchingLayers(LayerMask.GetMask("Ground"));
-        if (!isTouchingFeet && !isTouchingBody)
+        if (!isTouchingFeet && !isTouchingBody && !isTouchingHazard)
         {
             return;
         }
         if (value.isPressed)
         {
-            if (isTouchingFeet)
+            if (isTouchingFeet || isTouchingHazard)
             {
                 Jump();
                 hasWallJumped = false;
@@ -120,18 +123,24 @@ public class PlayerMovement : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D other) 
     {
-        bool isTouchingBody = myBodyCollider.IsTouchingLayers(LayerMask.GetMask("Enemy"));
-        if (isTouchingBody)
+        bool isTouchingEnemy = myBodyCollider.IsTouchingLayers(LayerMask.GetMask("Enemy"));
+        bool isTouchingHazard = myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Hazard"));
+        if (isTouchingEnemy || isTouchingHazard)
         {
-            Destroy(other.gameObject);
+            if (isTouchingEnemy)
+            {
+                Destroy(other.gameObject);
+            }
             myAnimator.SetTrigger("hit");
             if (playerHealth > 1)
             {
+                playerIsInvincible = true;
                 Shrink();
                 playerHealth -= 1;
                 sizeAdjust = 1.25f;
+                StartCoroutine(MakeMortal());
             }
-            else
+            else if (!playerIsInvincible)
             {
                 Die();
             }
@@ -146,5 +155,11 @@ public class PlayerMovement : MonoBehaviour
             Jump();            
             Destroy(other.gameObject);
         }
+    }
+
+    IEnumerator MakeMortal()
+    {
+        yield return new WaitForSeconds(invincibleTime);
+        playerIsInvincible = false;
     }
 }

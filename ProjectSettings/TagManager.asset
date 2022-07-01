@@ -8,6 +8,7 @@ TagManager:
   - Ground
   - Ladder
   - Hazards
+  - Checkpoint
   layers:
   - Default
   - TransparentFX
@@ -20,8 +21,8 @@ TagManager:
   - Player
   - Background
   - Enemy
-  - Spikes
-  - 
+  - Hazard
+  - Interactable
   - 
   - 
   - 
@@ -54,11 +55,14 @@ TagManager:
   - name: Scenery
     uniqueID: 2771002255
     locked: 0
-  - name: Spikes
+  - name: Hazard
     uniqueID: 281281203
     locked: 0
   - name: Platform
     uniqueID: 413178223
+    locked: 0
+  - name: Interactable
+    uniqueID: 441477249
     locked: 0
   - name: Enemy
     uniqueID: 2531450031
