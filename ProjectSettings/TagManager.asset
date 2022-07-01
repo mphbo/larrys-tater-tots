@@ -20,7 +20,7 @@ TagManager:
   - Player
   - Background
   - Enemy
-  - Spikes
+  - Hazards
   - 
   - 
   - 
@@ -54,7 +54,7 @@ TagManager:
   - name: Scenery
     uniqueID: 2771002255
     locked: 0
-  - name: Spikes
+  - name: Hazards
     uniqueID: 281281203
     locked: 0
   - name: Platform
