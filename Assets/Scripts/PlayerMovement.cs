@@ -8,7 +8,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float runSpeed = 7f;
     [SerializeField] float jumpSpeed = 5f;
     [SerializeField] float wallJumpSpeed = 2f;
-    [SerializeField] float invincibleTime = 4f;
+    [SerializeField] float invincibleTime = 0.5f;
     float playerHealth = 2f;
     float baseSize = 2f;
     float sizeAdjust = 1.75f;
@@ -21,7 +21,7 @@ public class PlayerMovement : MonoBehaviour
     GameObject player;
 
     bool hasWallJumped = false;
-    bool playerIsInvincible = false;
+    bool isInvincible = false;
     bool hasDied = false;
 
     void Start()
@@ -112,12 +112,19 @@ public class PlayerMovement : MonoBehaviour
     {
         Destroy(myBodyCollider);
         hasDied = true;
+        FindObjectOfType<GameSession>().ProcessPlayerDeath();
         // todo I need to figure out an animation or programmatic spin for character when dying
     }
 
     void Shrink() 
     {
-        Debug.Log(transform.localScale);
+        sizeAdjust = 1.25f;
+        transform.localScale = new Vector2(Mathf.Sign(transform.localScale.x) * sizeAdjust * baseSize, sizeAdjust * baseSize);
+    }
+
+    void Grow() 
+    {
+        sizeAdjust = 1.75f;
         transform.localScale = new Vector2(Mathf.Sign(transform.localScale.x) * sizeAdjust * baseSize, sizeAdjust * baseSize);
     }
 
@@ -127,20 +134,20 @@ public class PlayerMovement : MonoBehaviour
         bool isTouchingHazard = myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Hazard"));
         if (isTouchingEnemy || isTouchingHazard)
         {
-            if (isTouchingEnemy)
+            if (isTouchingEnemy && !isInvincible)
             {
                 Destroy(other.gameObject);
             }
             myAnimator.SetTrigger("hit");
             if (playerHealth > 1)
             {
-                playerIsInvincible = true;
                 Shrink();
                 playerHealth -= 1;
-                sizeAdjust = 1.25f;
+                isInvincible = true;
+                myAnimator.SetBool("isInvincible", true);
                 StartCoroutine(MakeMortal());
             }
-            else if (!playerIsInvincible)
+            else if (!isInvincible)
             {
                 Die();
             }
@@ -150,16 +157,27 @@ public class PlayerMovement : MonoBehaviour
     void OnTriggerEnter2D(Collider2D other) 
     {
         bool isTouchingFeet = myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Enemy"));
-        if (other.gameObject.tag == "Enemy" && isTouchingFeet)    
+        bool isTouchingMelon = myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Melon"));
+        if (isTouchingFeet)    
         {
             Jump();            
             Destroy(other.gameObject);
+        }
+        if (isTouchingMelon)
+        {
+            Destroy(other.gameObject);
+            if (playerHealth == 1)
+            {
+                playerHealth = 2;
+                Grow();
+            }
         }
     }
 
     IEnumerator MakeMortal()
     {
         yield return new WaitForSeconds(invincibleTime);
-        playerIsInvincible = false;
+        isInvincible = false;
+        myAnimator.SetBool("isInvincible", false);
     }
 }
