@@ -8,7 +8,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float runSpeed = 7f;
     [SerializeField] float jumpSpeed = 5f;
     [SerializeField] float wallJumpSpeed = 2f;
-    [SerializeField] float invincibleTime = 4f;
+    [SerializeField] float invincibleTime = 0.5f;
     float playerHealth = 2f;
     float baseSize = 2f;
     float sizeAdjust = 1.75f;
@@ -21,7 +21,7 @@ public class PlayerMovement : MonoBehaviour
     GameObject player;
 
     bool hasWallJumped = false;
-    bool playerIsInvincible = false;
+    bool isInvincible = false;
     bool hasDied = false;
 
     void Start()
@@ -112,12 +112,12 @@ public class PlayerMovement : MonoBehaviour
     {
         Destroy(myBodyCollider);
         hasDied = true;
+        FindObjectOfType<GameSession>().ProcessPlayerDeath();
         // todo I need to figure out an animation or programmatic spin for character when dying
     }
 
     void Shrink() 
     {
-        Debug.Log(transform.localScale);
         transform.localScale = new Vector2(Mathf.Sign(transform.localScale.x) * sizeAdjust * baseSize, sizeAdjust * baseSize);
     }
 
@@ -125,6 +125,7 @@ public class PlayerMovement : MonoBehaviour
     {
         bool isTouchingEnemy = myBodyCollider.IsTouchingLayers(LayerMask.GetMask("Enemy"));
         bool isTouchingHazard = myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Hazard"));
+        Debug.Log(isInvincible);
         if (isTouchingEnemy || isTouchingHazard)
         {
             if (isTouchingEnemy)
@@ -134,13 +135,14 @@ public class PlayerMovement : MonoBehaviour
             myAnimator.SetTrigger("hit");
             if (playerHealth > 1)
             {
-                playerIsInvincible = true;
                 Shrink();
                 playerHealth -= 1;
                 sizeAdjust = 1.25f;
+                isInvincible = true;
+                myAnimator.SetBool("isInvincible", true);
                 StartCoroutine(MakeMortal());
             }
-            else if (!playerIsInvincible)
+            else if (!isInvincible)
             {
                 Die();
             }
@@ -160,6 +162,8 @@ public class PlayerMovement : MonoBehaviour
     IEnumerator MakeMortal()
     {
         yield return new WaitForSeconds(invincibleTime);
-        playerIsInvincible = false;
+        Debug.Log("hitMakeMortalTimeUp");
+        isInvincible = false;
+        myAnimator.SetBool("isInvincible", false);
     }
 }
