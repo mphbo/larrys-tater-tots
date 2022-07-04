@@ -9,6 +9,7 @@ TagManager:
   - Ladder
   - Hazards
   - Checkpoint
+  - Melon
   layers:
   - Default
   - TransparentFX
@@ -23,7 +24,7 @@ TagManager:
   - Enemy
   - Hazard
   - Interactable
-  - 
+  - Melon
   - 
   - 
   - 

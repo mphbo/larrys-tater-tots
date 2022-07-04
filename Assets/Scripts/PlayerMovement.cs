@@ -118,6 +118,13 @@ public class PlayerMovement : MonoBehaviour
 
     void Shrink() 
     {
+        sizeAdjust = 1.25f;
+        transform.localScale = new Vector2(Mathf.Sign(transform.localScale.x) * sizeAdjust * baseSize, sizeAdjust * baseSize);
+    }
+
+    void Grow() 
+    {
+        sizeAdjust = 1.75f;
         transform.localScale = new Vector2(Mathf.Sign(transform.localScale.x) * sizeAdjust * baseSize, sizeAdjust * baseSize);
     }
 
@@ -125,10 +132,9 @@ public class PlayerMovement : MonoBehaviour
     {
         bool isTouchingEnemy = myBodyCollider.IsTouchingLayers(LayerMask.GetMask("Enemy"));
         bool isTouchingHazard = myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Hazard"));
-        Debug.Log(isInvincible);
         if (isTouchingEnemy || isTouchingHazard)
         {
-            if (isTouchingEnemy)
+            if (isTouchingEnemy && !isInvincible)
             {
                 Destroy(other.gameObject);
             }
@@ -137,7 +143,6 @@ public class PlayerMovement : MonoBehaviour
             {
                 Shrink();
                 playerHealth -= 1;
-                sizeAdjust = 1.25f;
                 isInvincible = true;
                 myAnimator.SetBool("isInvincible", true);
                 StartCoroutine(MakeMortal());
@@ -152,17 +157,26 @@ public class PlayerMovement : MonoBehaviour
     void OnTriggerEnter2D(Collider2D other) 
     {
         bool isTouchingFeet = myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Enemy"));
-        if (other.gameObject.tag == "Enemy" && isTouchingFeet)    
+        bool isTouchingMelon = myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Melon"));
+        if (isTouchingFeet)    
         {
             Jump();            
             Destroy(other.gameObject);
+        }
+        if (isTouchingMelon)
+        {
+            Destroy(other.gameObject);
+            if (playerHealth == 1)
+            {
+                playerHealth = 2;
+                Grow();
+            }
         }
     }
 
     IEnumerator MakeMortal()
     {
         yield return new WaitForSeconds(invincibleTime);
-        Debug.Log("hitMakeMortalTimeUp");
         isInvincible = false;
         myAnimator.SetBool("isInvincible", false);
     }
