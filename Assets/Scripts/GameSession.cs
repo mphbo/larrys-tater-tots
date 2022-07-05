@@ -51,7 +51,7 @@ public class GameSession : MonoBehaviour
         Destroy(gameObject);
     }
 
-    void AddToScore(int pointsToAdd)
+    public void AddToScore(int pointsToAdd)
     {
         score += pointsToAdd;
         scoreText.text = score.ToString();

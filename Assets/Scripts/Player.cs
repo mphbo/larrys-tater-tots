@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerMovement : MonoBehaviour
+public class Player : MonoBehaviour
 {
     [SerializeField] float runSpeed = 7f;
     [SerializeField] float jumpSpeed = 5f;
     [SerializeField] float wallJumpSpeed = 2f;
     [SerializeField] float invincibleTime = 0.5f;
+
     float playerHealth = 2f;
     float baseSize = 2f;
     float sizeAdjust = 1.75f;
@@ -128,6 +129,12 @@ public class PlayerMovement : MonoBehaviour
         transform.localScale = new Vector2(Mathf.Sign(transform.localScale.x) * sizeAdjust * baseSize, sizeAdjust * baseSize);
     }
 
+    public void GainHealth(int health)
+    {
+        playerHealth += health;
+        Grow();
+    }
+
     void OnCollisionEnter2D(Collision2D other) 
     {
         bool isTouchingEnemy = myBodyCollider.IsTouchingLayers(LayerMask.GetMask("Enemy"));
@@ -162,15 +169,6 @@ public class PlayerMovement : MonoBehaviour
         {
             Jump();            
             Destroy(other.gameObject);
-        }
-        if (isTouchingMelon)
-        {
-            Destroy(other.gameObject);
-            if (playerHealth == 1)
-            {
-                playerHealth = 2;
-                Grow();
-            }
         }
     }
 
