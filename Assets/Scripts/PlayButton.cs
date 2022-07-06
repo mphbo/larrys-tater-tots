@@ -5,17 +5,20 @@ using UnityEngine.SceneManagement;
 
 public class PlayButton : MonoBehaviour
 {
+    GameSession gameSession;
+
+    void Start()
+    {
+        gameSession = FindObjectOfType<GameSession>();
+    }
     void OnTriggerEnter2D(Collider2D other) 
     {
-        SceneManager.LoadScene(1);
-        Debug.Log(other.gameObject.name);
-        if (other.gameObject.name == "Larry")
-        {
-            Destroy(GameObject.Find("Greg"));
-        }
-        if (other.gameObject.name == "Greg")
-        {
-            Destroy(GameObject.Find("Larry"));
-        }
+        // if (other.gameObject.name == "Greg")
+        // {
+        //     Debug.Log("HIT");
+        //     gameSession.SetGreg();
+        // }
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadScene(currentSceneIndex + 1);
     }
 }

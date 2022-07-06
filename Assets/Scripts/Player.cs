@@ -9,6 +9,7 @@ public class Player : MonoBehaviour
     [SerializeField] float jumpSpeed = 5f;
     [SerializeField] float wallJumpSpeed = 2f;
     [SerializeField] float invincibleTime = 0.5f;
+    [SerializeField] bool isFlipped = false;
 
     float playerHealth = 2f;
     float baseSize = 2f;
@@ -20,6 +21,7 @@ public class Player : MonoBehaviour
     BoxCollider2D myFeetCollider;
     Animator myAnimator;
     GameObject player;
+    GameSession gameSession;
 
     bool hasWallJumped = false;
     bool isInvincible = false;
@@ -32,6 +34,16 @@ public class Player : MonoBehaviour
         myFeetCollider = GetComponent<BoxCollider2D>();
         myAnimator = GetComponent<Animator>();
         player = GameObject.FindWithTag("Player");
+        gameSession = FindObjectOfType<GameSession>();
+
+        if (isFlipped)
+        {
+            transform.localScale = new Vector2( -1 * (sizeAdjust * baseSize), sizeAdjust * baseSize);
+        }
+        // if (gameSession.GetGreg() == true)
+        // {
+        //     myAnimator.runtimeAnimatorController = Resources.Load("Greg") as RuntimeAnimatorController;
+        // }
     }
 
     void Update()
