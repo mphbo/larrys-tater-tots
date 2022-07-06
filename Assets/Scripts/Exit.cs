@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class Exit : MonoBehaviour
 {
-    [SerializeField] float time = 3f;
+    [SerializeField] float time = 1f;
 
     void OnTriggerEnter2D(Collider2D other)
     {
@@ -24,6 +24,7 @@ public class Exit : MonoBehaviour
         {
             nextSceneIndex = 0;
         }
+        FindObjectOfType<ScenePersist>().ResetScenePersist();
         SceneManager.LoadScene(nextSceneIndex);
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,6 +14,7 @@ public class GameSession : MonoBehaviour
     [SerializeField] TextMeshProUGUI scoreText;
 
     float timeTillRestart = 1.5f;
+    // bool isGreg = false;
 
     void Start()
     {
@@ -33,6 +35,16 @@ public class GameSession : MonoBehaviour
         }
     }
 
+    // public void SetGreg()
+    // {
+    //     isGreg = true;
+    // }
+
+    // public bool GetGreg()
+    // {
+    //     return isGreg;
+    // }
+
     public void ProcessPlayerDeath()
     {
         if (playerLives > 1)
@@ -47,11 +59,14 @@ public class GameSession : MonoBehaviour
 
     void ResetGameSession()
     {
-        SceneManager.LoadScene(0);
+        FindObjectOfType<ScenePersist>().ResetScenePersist();
+        int lastCheckpoint = SceneManager.GetActiveScene().buildIndex - ((SceneManager.GetActiveScene().buildIndex + 1) % 6);
+        Debug.Log(lastCheckpoint);
+        SceneManager.LoadScene(lastCheckpoint);
         Destroy(gameObject);
     }
 
-    void AddToScore(int pointsToAdd)
+    public void AddToScore(int pointsToAdd)
     {
         score += pointsToAdd;
         scoreText.text = score.ToString();
