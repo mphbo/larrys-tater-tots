@@ -350,7 +350,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Keep going!
+  m_text: Play
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1158b9076882d40d8b1033bf66558a0f, type: 2}
   m_sharedMaterial: {fileID: 5016686481710811528, guid: 1158b9076882d40d8b1033bf66558a0f, type: 2}
@@ -413,7 +413,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -51.148346, y: 0, z: -53.23603, w: 0}
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -2824,7 +2824,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Checkpoint!
+  m_text: The Greg and larry show
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1158b9076882d40d8b1033bf66558a0f, type: 2}
   m_sharedMaterial: {fileID: 5016686481710811528, guid: 1158b9076882d40d8b1033bf66558a0f, type: 2}
@@ -4085,7 +4085,7 @@ GameObject:
   - component: {fileID: 1695753888}
   - component: {fileID: 1695753887}
   m_Layer: 5
-  m_Name: Checkpoint
+  m_Name: Play
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4219,7 +4219,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -960.0182, y: -256.4022}
+  m_Offset: {x: -960.0268, y: -195.7044}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -4230,7 +4230,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 3.6660156, y: 1.578125}
+  m_Size: {x: 2.7320557, y: 1.0810394}
   m_EdgeRadius: 0
 --- !u!4 &1960700701 stripped
 Transform:

@@ -60,7 +60,7 @@ public class GameSession : MonoBehaviour
     void ResetGameSession()
     {
         FindObjectOfType<ScenePersist>().ResetScenePersist();
-        int lastCheckpoint = SceneManager.GetActiveScene().buildIndex - ((SceneManager.GetActiveScene().buildIndex + 1) % 6);
+        int lastCheckpoint = SceneManager.GetActiveScene().buildIndex - ((SceneManager.GetActiveScene().buildIndex) % 6);
         Debug.Log(lastCheckpoint);
         SceneManager.LoadScene(lastCheckpoint);
         Destroy(gameObject);
