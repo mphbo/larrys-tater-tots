@@ -350,7 +350,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Keep going!
+  m_text: You're done! Let me know how it was, I'll improve and build more levels!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1158b9076882d40d8b1033bf66558a0f, type: 2}
   m_sharedMaterial: {fileID: 5016686481710811528, guid: 1158b9076882d40d8b1033bf66558a0f, type: 2}
@@ -2824,7 +2824,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Checkpoint!
+  m_text: The End, For Now!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1158b9076882d40d8b1033bf66558a0f, type: 2}
   m_sharedMaterial: {fileID: 5016686481710811528, guid: 1158b9076882d40d8b1033bf66558a0f, type: 2}
